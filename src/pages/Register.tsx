@@ -1,0 +1,157 @@
+import {
+	Button,
+	Checkbox,
+	Flex,
+	FormControl,
+	FormLabel,
+	Heading,
+	Input,
+	Link,
+	Stack,
+	Image,
+	Text,
+	Box,
+	useToast,
+} from "@chakra-ui/react";
+import illustration from "../images/illustration.svg";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { setLocalStorage } from "../services/utils/localStorageUtils";
+import { registerUser } from "../services/api/user";
+
+export function Register() {
+	const intitialState = {
+		email: "",
+		password: "",
+		rollNumber: "",
+		name: "",
+	};
+	const [registerInfo, setRegisterInfo] = useState(intitialState);
+	const [buttonLoading, setButtonLoading] = useState(false);
+	const navigate = useNavigate();
+	const toast = useToast();
+
+	const onRegisterValueChange: React.ChangeEventHandler<HTMLInputElement> = (
+		e
+	) => {
+		setRegisterInfo({ ...registerInfo, [e.target.name]: e.target.value });
+	};
+
+	const onRegister = async (e: any) => {
+		setButtonLoading(true);
+		if (
+			registerInfo.rollNumber &&
+			registerInfo.name &&
+			registerInfo.email &&
+			registerInfo.password
+		) {
+			try {
+				const { data } = await registerUser(registerInfo);
+				setLocalStorage(data.token);
+				navigate("/home");
+			} catch (e: any) {
+				toast({
+					title: e.response.data.error,
+					description: e.response.data.message,
+					status: "error",
+					duration: 5000,
+					isClosable: true,
+				});
+			}
+		}
+	};
+
+	return (
+		<Stack direction={{ base: "column", md: "row" }}>
+			<Flex p={8} flex={1} justify={"center"} mt={6}>
+				<Stack spacing={16} minW="xl">
+					<Box>
+						<Heading
+							fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+						>
+							Book{" "}
+							<Text color={"green.400"} as="span">
+								Exchange
+							</Text>{" "}
+						</Heading>
+						<Text
+							fontSize={{ base: "md", lg: "lg" }}
+							color={"gray.500"}
+							maxW="xl"
+							mt={8}
+						>
+							A Book exchange website to help connect book owners
+							who are interested in trading their used books with
+							others.
+						</Text>
+					</Box>
+
+					<Stack spacing={6} w={"full"} maxW={"md"}>
+						<Heading size="md" letterSpacing="wide">
+							Discover & read more
+						</Heading>
+						<FormControl id="name">
+							<FormLabel>Name</FormLabel>
+							<Input
+								type="text"
+								name="name"
+								onChange={onRegisterValueChange}
+							/>
+						</FormControl>
+						<FormControl id="id">
+							<FormLabel>Id Number</FormLabel>
+							<Input
+								type="text"
+								placeholder="f20190999"
+								name="rollNumber"
+								onChange={onRegisterValueChange}
+							/>
+						</FormControl>
+						<FormControl id="email">
+							<FormLabel>Email address</FormLabel>
+							<Input
+								type="email"
+								name="email"
+								onChange={onRegisterValueChange}
+							/>
+						</FormControl>
+						<FormControl id="password">
+							<FormLabel>Password</FormLabel>
+							<Input
+								type="password"
+								name="password"
+								onChange={onRegisterValueChange}
+							/>
+						</FormControl>
+						<Stack spacing={2}>
+							<Button
+								colorScheme={"green"}
+								variant={"solid"}
+								isLoading={buttonLoading}
+							>
+								Register
+							</Button>
+							<Text textAlign="center">
+								Already member?{" "}
+								<Link
+									as={RouterLink}
+									color="green.400"
+									to="/login"
+								>
+									Login
+								</Link>
+							</Text>
+						</Stack>
+					</Stack>
+				</Stack>
+			</Flex>
+			<Flex flex={1} minH="90vh" align="center">
+				<Image
+					alt={"Login Image"}
+					objectFit={"fill"}
+					src={illustration}
+				/>
+			</Flex>
+		</Stack>
+	);
+}

@@ -1809,6 +1809,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@fontsource/inter@^4.5.7":
+  version "4.5.7"
+  resolved "https://registry.yarnpkg.com/@fontsource/inter/-/inter-4.5.7.tgz#f0657c52105ed51e04ac636a25d6016896c5ee9d"
+  integrity sha512-25k3thupaOEBexuU+jAkGqieKPbuhSuA+sinDwp1iBNhqQPiJ9QHDvsXgoCgCbZ4sGlE8aCwZmSlDJrPdJHNkw==
+
 "@fontsource/merriweather-sans@^4.5.5":
   version "4.5.5"
   resolved "https://registry.yarnpkg.com/@fontsource/merriweather-sans/-/merriweather-sans-4.5.5.tgz#3f7bf788cd3cf42942f64f1e34d09e4b6c73af0a"

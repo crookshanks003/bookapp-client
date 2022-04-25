@@ -6,6 +6,7 @@
 		"@chakra-ui/react": "^1.8.8",
 		"@emotion/react": "^11",
 		"@emotion/styled": "^11",
+		"@fontsource/inter": "^4.5.7",
 		"@fontsource/merriweather": "^4.5.8",
 		"@fontsource/merriweather-sans": "^4.5.5",
 		"@testing-library/jest-dom": "^5.14.1",

@@ -22,8 +22,8 @@ import {
 	useNavigate,
 } from "react-router-dom";
 import { MdOutlineClose, MdMenu } from "react-icons/md";
-import { AiFillControl } from "react-icons/ai";
-import { clearLocalStorage } from "../services/utils";
+import { ImBook } from "react-icons/im";
+import { clearLocalStorage } from "../services/utils/localStorageUtils";
 import { useQuery } from "react-query";
 import { getUserProfile } from "../services/api/user";
 
@@ -65,12 +65,14 @@ export const Navbar = ({
 	setLoggedIn: React.Dispatch<SetStateAction<boolean>>;
 }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	let links = [
-		{ name: "Home", href: "/home" },
-		{ name: "Tracks", href: "/tracks" },
-		{ name: "Artists", href: "/artists" },
-		{ name: "Recent", href: "/recent" },
-	];
+	let links = loggedIn
+		? [
+				{ name: "Home", href: "/home" },
+				{ name: "Tracks", href: "/tracks" },
+				{ name: "Artists", href: "/artists" },
+				{ name: "Recent", href: "/recent" },
+		  ]
+		: [];
 
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -109,10 +111,10 @@ export const Navbar = ({
 					fontSize="3xl"
 				>
 					<Text>
-						<AiFillControl />
+						<ImBook />
 					</Text>
-					<Text fontWeight="semibold">
-						<Link href="/">Strings</Link>
+					<Text fontWeight="medium">
+						<Link href="/">book<span style={{fontWeight:"200", fontStyle:"italic"}}>exchange</span></Link>
 					</Text>
 				</HStack>
 				<Flex alignItems={"center"}>

@@ -1,5 +1,5 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { User } from "../../types/user";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import { RegisterUserDto, User } from "../../types/user";
 
 const client = axios.create({ baseURL: "http://localhost:8080/user" });
 
@@ -19,4 +19,8 @@ export function loginUser(loginInfo: {email: string, password: string}) {
 
 export function getUserProfile() {
 	return client.get<any,AxiosResponse<User, any>>("/get", getConfig());
+}
+
+export function registerUser(registerInfo: RegisterUserDto){
+	return client.post<any, AxiosResponse<{token: string}>>("/register", registerInfo);
 }

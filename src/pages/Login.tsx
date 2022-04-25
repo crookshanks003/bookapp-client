@@ -1,19 +1,23 @@
 import {
 	Box,
 	Button,
+	Center,
 	Flex,
 	FormControl,
 	FormLabel,
+	Heading,
 	Input,
 	Link,
 	Stack,
+	Text,
 	useColorModeValue,
 	useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/api/user";
-import { setLocalStorage } from "../services/utils";
+import { setLocalStorage } from "../services/utils/localStorageUtils";
+import {Link as RouterLink } from "react-router-dom";
 
 export function Login() {
 	const [buttonLoading, setButtonLoading] = useState(false);
@@ -51,54 +55,59 @@ export function Login() {
 	};
 
 	return (
-		<Flex
-			minH="100vh"
-			align="center"
-			justify="center"
-			bg={useColorModeValue("gray.50", "gray.800")}
-		>
+		<Box minH="92vh" bg={useColorModeValue("gray.50", "gray.800")} pt={8}>
 			<Box
 				width={"md"}
 				rounded={"lg"}
 				bg={useColorModeValue("white", "gray.700")}
 				boxShadow={"lg"}
 				p={8}
+				mx="auto"
 			>
 				<Stack spacing={4}>
+				<Heading fontSize="xl" color="gray.700" letterSpacing="wide" mb={3} textAlign="center">Login to Bookexchange</Heading>
 					<FormControl id="email">
-						<FormLabel>Email address</FormLabel>
+						<FormLabel color="gray.700">Email address</FormLabel>
 						<Input
 							type="email"
 							name="email"
 							onChange={onLoginValueChange}
+							color="gray.700"
 						/>
 					</FormControl>
 					<FormControl id="password">
-						<FormLabel>Password</FormLabel>
+						<FormLabel color="gray.700">Password</FormLabel>
 						<Input
 							type="password"
 							name="password"
 							onChange={onLoginValueChange}
+							color="gray.700"
 						/>
 					</FormControl>
-					<Stack spacing={10}>
+					<Stack spacing={8}>
 						<Stack
 							direction={{ base: "column", sm: "row" }}
 							align={"start"}
 							justify={"space-between"}
 						>
-							<Link color="blue.400">Forgot password?</Link>
+							<Link color="green.400">Forgot password?</Link>
 						</Stack>
 						<Button
-							colorScheme="blue"
+							colorScheme="green"
 							onClick={onLogin}
 							isLoading={buttonLoading}
 						>
 							Sign in
 						</Button>
 					</Stack>
+						<Center marginTop="0px">
+							<Text>
+								New Here?{" "}
+								<Link as={RouterLink} color="green.400" to="/register">Register</Link>
+							</Text>
+						</Center>
 				</Stack>
 			</Box>
-		</Flex>
+		</Box>
 	);
 }

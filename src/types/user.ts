@@ -11,3 +11,10 @@ export interface User {
 	role: Role;
 	wallet: number;
 }
+
+export interface RegisterUserDto {
+	email: string;
+	password: string;
+	name: string;
+	rollNumber: string;
+}
