@@ -37,27 +37,55 @@ export function Register() {
 		setRegisterInfo({ ...registerInfo, [e.target.name]: e.target.value });
 	};
 
-	const onRegister = async (e: any) => {
+	const onRegister = async () => {
 		setButtonLoading(true);
 		if (
-			registerInfo.rollNumber &&
-			registerInfo.name &&
-			registerInfo.email &&
-			registerInfo.password
+			!registerInfo.rollNumber &&
+			!registerInfo.name &&
+			!registerInfo.email &&
+			!registerInfo.password
 		) {
-			try {
-				const { data } = await registerUser(registerInfo);
-				setLocalStorage(data.token);
-				navigate("/home");
-			} catch (e: any) {
-				toast({
-					title: e.response.data.error,
-					description: e.response.data.message,
-					status: "error",
-					duration: 5000,
-					isClosable: true,
-				});
-			}
+			toast({
+				title: "Empty Feild",
+				description: "All fields are required",
+				status: "error",
+				duration: 5000,
+				isClosable: true,
+			});
+			return;
+		}
+		if (registerInfo.password.length < 6) {
+			toast({
+				title: "Invalid Password",
+				description: "Password must be of length 6 or more",
+				status: "error",
+				duration: 5000,
+				isClosable: true,
+			});
+			return;
+		}
+		if (registerInfo.rollNumber.length != 9) {
+			toast({
+				title: "Invalid id number",
+				description: "id number must be of format f20yyxxxx",
+				status: "error",
+				duration: 5000,
+				isClosable: true,
+			});
+			return;
+		}
+		try {
+			const { data } = await registerUser(registerInfo);
+			setLocalStorage(data.token);
+			navigate("/home");
+		} catch (e: any) {
+			toast({
+				title: e.response.data.error,
+				description: e.response.data.message,
+				status: "error",
+				duration: 5000,
+				isClosable: true,
+			});
 		}
 	};
 
@@ -128,6 +156,7 @@ export function Register() {
 								colorScheme={"green"}
 								variant={"solid"}
 								isLoading={buttonLoading}
+								onClick={onRegister}
 							>
 								Register
 							</Button>
