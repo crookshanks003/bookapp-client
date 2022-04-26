@@ -1,4 +1,4 @@
-import { Box, Stack } from "@chakra-ui/react";
+import { Box, Flex, Spacer, Stack, Text } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import { BookComponent } from "../components/BookComponent";
 import { ErrorComponent } from "../components/ErrorComponent";
@@ -6,6 +6,12 @@ import { Loader } from "../components/Loader";
 import { getFeed } from "../services/api/user";
 import { AxiosError } from "axios";
 import { Dispatch, SetStateAction } from "react";
+import {
+	getRequests,
+	getTransactionForUser,
+} from "../services/api/transaction";
+import { RequestedByYou } from "../components/RequestedByYou";
+import { RequestedFromYou } from "../components/RequestedFromYou";
 
 export function Home({
 	setLoggedIn,
@@ -13,8 +19,10 @@ export function Home({
 	setLoggedIn: Dispatch<SetStateAction<boolean>>;
 }) {
 	const { data, isLoading, error } = useQuery("feed", getFeed);
+	const transactions = useQuery("user-transaction", getTransactionForUser);
+	const requests = useQuery("user-request", getRequests);
 
-	if (isLoading) {
+	if (isLoading || transactions.isLoading) {
 		return <Loader />;
 	}
 
@@ -30,11 +38,69 @@ export function Home({
 
 	return (
 		<Box minH="92vh" bg="gray.50" pt="8">
-			<Stack maxW="lg" spacing="4" mx="auto">
-				{data.data.map((book, id) => (
-					<BookComponent key={id} book={book} />
-				))}
-			</Stack>
+			<Flex width="80%" mx="auto" align="start">
+				<Box>
+					<Text
+						color="gray.500"
+						fontWeight="semibold"
+						fontSize="sm"
+						mb="1"
+					>
+						BORROWINGS
+					</Text>
+					<Stack w="md" spacing="4">
+						{transactions.data?.data.length === 0 ? (
+							<Text fontStyle="italic" color="gray.500">You have no borrowings...</Text>
+						) : (
+							transactions.data?.data.map((transaction, id) => (
+								<RequestedByYou
+									key={id}
+									transaction={transaction}
+								/>
+							))
+						)}
+					</Stack>
+				</Box>
+				<Spacer />
+				<Box>
+					<Text
+						color="gray.500"
+						fontWeight="semibold"
+						fontSize="sm"
+						mb="1"
+					>
+						UPDATES
+					</Text>
+					<Stack w="xl" spacing="4">
+						{data.data.map((book, id) => (
+							<BookComponent key={id} book={book} />
+						))}
+					</Stack>
+				</Box>
+				<Spacer />
+				<Box>
+					<Text
+						color="gray.500"
+						fontWeight="semibold"
+						fontSize="sm"
+						mb="1"
+					>
+						REQUESTS
+					</Text>
+					<Stack w="md" spacing="4">
+						{requests.data?.data.length === 0 ? (
+							<Text fontStyle="italic" color="gray.500">You have no requests...</Text>
+						) : (
+							requests.data?.data.map((transaction, id) => (
+								<RequestedFromYou
+									key={id}
+									transaction={transaction}
+								/>
+							))
+						)}
+					</Stack>
+				</Box>
+			</Flex>
 		</Box>
 	);
 }

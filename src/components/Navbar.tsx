@@ -15,9 +15,6 @@ import {
 	Stack,
 	Text,
 	Spinner,
-	Input,
-	InputRightAddon,
-	InputGroup,
 } from "@chakra-ui/react";
 import {
 	Link as ReactRouterLink,
@@ -73,7 +70,7 @@ export const Navbar = ({
 		? [
 				{ name: "Home", href: "/home" },
 				{ name: "Add", href: "/add-book" },
-				{ name: "Artists", href: "/artists" },
+				{ name: "Search", href: "/search" },
 				{ name: "Recent", href: "/recent" },
 		  ]
 		: [];
@@ -83,11 +80,6 @@ export const Navbar = ({
 	const { data, isLoading, isError } = useQuery("profile", getUserProfile, {
 		enabled: loggedIn,
 	});
-	const [searchString, setSearchString] = useState("");
-
-	const onSearch = () => {
-		console.log(searchString);
-	}
 
 	const logOut = () => {
 		clearLocalStorage();
@@ -141,12 +133,6 @@ export const Navbar = ({
 						spacing={2}
 						display={{ base: "none", md: "flex" }}
 					>
-					{loggedIn && (
-						<InputGroup size="sm" w={"lg"}>
-							<Input placeholder="Search..." py={5} onChange={(e) => setSearchString(e.target.value)}/>
-							<InputRightAddon children={<BiSearch/>} py={5} style={{cursor: "pointer"}} onClick={onSearch}/>
-						</InputGroup>
-					)}
 						{links.map((link) => (
 							<NavLink
 								key={link.name}
@@ -169,7 +155,7 @@ export const Navbar = ({
 									cursor={"pointer"}
 									background="gray.700"
 									minW={0}
-									ms={2}
+									ms={4}
 									disabled={isError}
 								>
 									<Avatar
@@ -197,7 +183,7 @@ export const Navbar = ({
 			</Flex>
 
 			{isOpen ? (
-				<Box pb={4} display={{ md: "none" }}>
+				<Box pb={4} display={{ md: "none" }} px="6">
 					<Stack as={"nav"} spacing={3}>
 						{links.map((link) => (
 							<NavLink

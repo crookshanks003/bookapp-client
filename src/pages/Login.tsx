@@ -13,13 +13,13 @@ import {
 	useColorModeValue,
 	useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/api/user";
 import { setLocalStorage } from "../services/utils/localStorageUtils";
 import {Link as RouterLink } from "react-router-dom";
 
-export function Login() {
+export function Login({setLoggedIn}: {setLoggedIn: Dispatch<SetStateAction<boolean>>}) {
 	const [buttonLoading, setButtonLoading] = useState(false);
 	const toast = useToast();
 	const navigate = useNavigate();
@@ -40,6 +40,7 @@ export function Login() {
 			try {
 				const { data } = await loginUser(loginInfo);
 				setLocalStorage(data.token);
+				setLoggedIn(true);
 				navigate("/home");
 			} catch (e: any) {
 				toast({

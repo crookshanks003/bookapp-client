@@ -12,6 +12,7 @@ export interface FeedBook {
 	owner: UserResponse;
 	author: Author;
 	category: Category;
+	createdDate: string;
 }
 
 export interface Book {
@@ -24,6 +25,7 @@ export interface Book {
 	owner: User;
 	author: Author;
 	category: Category;
+	createdDate: string;
 }
 
 export interface AddBookDto{
