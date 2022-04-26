@@ -41,17 +41,17 @@ const NavLink = ({
 		to={href}
 		px={2}
 		py={1}
-		fontWeight="medium"
+		fontWeight={active ? "semibold" : "medium"}
 		fontSize="lg"
 		rounded={"md"}
 		_hover={{
 			textDecoration: "none",
-			color: "gray.700",
+			color: "green.500",
 		}}
 		_active={{
-			color: "green.700",
+			color: "green.500",
 		}}
-		color={active ? "gray.700" : "gray.500"}
+		color={active ? "green.500" : "gray.500"}
 	>
 		{children}
 	</Link>

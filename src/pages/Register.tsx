@@ -1,6 +1,5 @@
 import {
 	Button,
-	Checkbox,
 	Flex,
 	FormControl,
 	FormLabel,
@@ -64,7 +63,7 @@ export function Register() {
 			});
 			return;
 		}
-		if (registerInfo.rollNumber.length != 9) {
+		if (registerInfo.rollNumber.length !== 9) {
 			toast({
 				title: "Invalid id number",
 				description: "id number must be of format f20yyxxxx",
@@ -77,7 +76,7 @@ export function Register() {
 		try {
 			const { data } = await registerUser(registerInfo);
 			setLocalStorage(data.token);
-			navigate("/home");
+			navigate("/set-category");
 		} catch (e: any) {
 			toast({
 				title: e.response.data.error,

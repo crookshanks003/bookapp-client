@@ -1,26 +1,39 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { Axios, AxiosResponse } from "axios";
+import { FeedBook } from "../../types/book";
 import { RegisterUserDto, User } from "../../types/user";
+import { getConfig } from "../utils/localStorageUtils";
 
 const client = axios.create({ baseURL: "http://localhost:8080/user" });
 
-function getConfig(): AxiosRequestConfig {
-	const token = localStorage.getItem("token") as string;
-	const config: AxiosRequestConfig = {
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
-	};
-	return config;
-}
-
-export function loginUser(loginInfo: {email: string, password: string}) {
-	return client.post<any, AxiosResponse<{token: string}>>("/login", loginInfo);
+export function loginUser(loginInfo: { email: string; password: string }) {
+	return client.post<any, AxiosResponse<{ token: string }>>(
+		"/login",
+		loginInfo
+	);
 }
 
 export function getUserProfile() {
-	return client.get<any,AxiosResponse<User, any>>("/get", getConfig());
+	return client.get<any, AxiosResponse<User, any>>("/get", getConfig());
 }
 
-export function registerUser(registerInfo: RegisterUserDto){
-	return client.post<any, AxiosResponse<{token: string}>>("/register", registerInfo);
+export function registerUser(registerInfo: RegisterUserDto) {
+	return client.post<any, AxiosResponse<{ token: string }>>(
+		"/register",
+		registerInfo
+	);
+}
+
+export function addCategories(categories: number[]) {
+	return client.post<any, AxiosResponse<User>>(
+		"/update/category",
+		{ ids: categories },
+		getConfig()
+	);
+}
+
+export function getFeed() {
+	return client.get<any, AxiosResponse<FeedBook[], any>>(
+		"/feed",
+		getConfig()
+	);
 }
