@@ -76,7 +76,7 @@ export function Register() {
 		try {
 			const { data } = await registerUser(registerInfo);
 			setLocalStorage(data.token);
-			navigate("/set-category");
+			navigate("/set-categories");
 		} catch (e: any) {
 			toast({
 				title: e.response.data.error,
@@ -86,6 +86,7 @@ export function Register() {
 				isClosable: true,
 			});
 		}
+		setButtonLoading(false);
 	};
 
 	return (

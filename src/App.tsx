@@ -3,13 +3,14 @@ import "@fontsource/merriweather";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
 import { checkLoggedIn } from "./services/utils/localStorageUtils";
 import { Navbar } from "./components/Navbar";
 import { Register } from "./pages/Register";
 import { SetCategories } from "./pages/SetCategory";
+import { AddBook } from "./pages/AddBook";
 
 const theme = extendTheme({
 	fonts: {
@@ -35,7 +36,7 @@ function App() {
 					<Routes>
 						<Route path="/home" element={<Home setLoggedIn={setLoggedIn}/>} />
 						<Route path="/set-categories" element={<SetCategories />} />
-						<Route path="*" element={<Navigate to="/home" />} />
+						<Route path="/add-book" element={<AddBook />} />
 					</Routes>
 				</QueryClientProvider>
 			) : (
@@ -45,7 +46,6 @@ function App() {
 						<Route path="/login" element={<Login />} />
 						<Route path="/register" element={<Register />} />
 						<Route path="/set-categories" element={<SetCategories />} />
-						<Route path="*" element={<Navigate to="/register" />} />
 					</Routes>
 				</QueryClientProvider>
 			)}

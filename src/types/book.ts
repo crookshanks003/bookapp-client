@@ -25,3 +25,11 @@ export interface Book {
 	author: Author;
 	category: Category;
 }
+
+export interface AddBookDto{
+	name: string;
+	isbn: string;
+	year: number;
+	categoryId: number;
+	authorId: number;
+}

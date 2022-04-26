@@ -1,4 +1,4 @@
-import React, { ReactNode, SetStateAction } from "react";
+import React, { ReactNode, SetStateAction, useState } from "react";
 import {
 	Box,
 	Flex,
@@ -15,6 +15,9 @@ import {
 	Stack,
 	Text,
 	Spinner,
+	Input,
+	InputRightAddon,
+	InputGroup,
 } from "@chakra-ui/react";
 import {
 	Link as ReactRouterLink,
@@ -26,6 +29,7 @@ import { ImBook } from "react-icons/im";
 import { clearLocalStorage } from "../services/utils/localStorageUtils";
 import { useQuery } from "react-query";
 import { getUserProfile } from "../services/api/user";
+import {BiSearch} from "react-icons/bi"
 
 const NavLink = ({
 	children,
@@ -68,7 +72,7 @@ export const Navbar = ({
 	let links = loggedIn
 		? [
 				{ name: "Home", href: "/home" },
-				{ name: "Tracks", href: "/tracks" },
+				{ name: "Add", href: "/add-book" },
 				{ name: "Artists", href: "/artists" },
 				{ name: "Recent", href: "/recent" },
 		  ]
@@ -76,10 +80,14 @@ export const Navbar = ({
 
 	const location = useLocation();
 	const navigate = useNavigate();
-
 	const { data, isLoading, isError } = useQuery("profile", getUserProfile, {
 		enabled: loggedIn,
 	});
+	const [searchString, setSearchString] = useState("");
+
+	const onSearch = () => {
+		console.log(searchString);
+	}
 
 	const logOut = () => {
 		clearLocalStorage();
@@ -114,7 +122,17 @@ export const Navbar = ({
 						<ImBook />
 					</Text>
 					<Text fontWeight="medium">
-						<Link href="/">book<span style={{fontWeight:"200", fontStyle:"italic"}}>exchange</span></Link>
+						<Link href="/">
+							book
+							<span
+								style={{
+									fontWeight: "200",
+									fontStyle: "italic",
+								}}
+							>
+								exchange
+							</span>
+						</Link>
 					</Text>
 				</HStack>
 				<Flex alignItems={"center"}>
@@ -123,6 +141,12 @@ export const Navbar = ({
 						spacing={2}
 						display={{ base: "none", md: "flex" }}
 					>
+					{loggedIn && (
+						<InputGroup size="sm" w={"lg"}>
+							<Input placeholder="Search..." py={5} onChange={(e) => setSearchString(e.target.value)}/>
+							<InputRightAddon children={<BiSearch/>} py={5} style={{cursor: "pointer"}} onClick={onSearch}/>
+						</InputGroup>
+					)}
 						{links.map((link) => (
 							<NavLink
 								key={link.name}
@@ -145,7 +169,7 @@ export const Navbar = ({
 									cursor={"pointer"}
 									background="gray.700"
 									minW={0}
-									ms={6}
+									ms={2}
 									disabled={isError}
 								>
 									<Avatar
