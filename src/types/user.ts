@@ -13,6 +13,7 @@ export interface User {
 	role: Role;
 	wallet: number;
 	categories: Category[];
+	active: boolean;
 }
 
 export interface UserResponse {

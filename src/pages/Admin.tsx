@@ -4,22 +4,34 @@ import {
 	AccordionIcon,
 	AccordionItem,
 	AccordionPanel,
+	Avatar,
 	Box,
 	Button,
 	Flex,
 	Input,
-	toast,
+	InputGroup,
+	InputLeftElement,
+	Stack,
+	Text,
+	Spinner,
 	useToast,
+	Spacer,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { BiSearch } from "react-icons/bi";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
+import { useDebounce } from "use-debounce";
 import { ErrorComponent } from "../components/ErrorComponent";
 import { Loader } from "../components/Loader";
 import { addAuthor } from "../services/api/author";
 import { addCategory } from "../services/api/category";
-import { getUserProfile } from "../services/api/user";
-import { Role } from "../types/user";
+import { deleteUser, getUserProfile, searchUser } from "../services/api/user";
+import { Role, User } from "../types/user";
+
+function UserCard(user: User) {
+	return <Text>{user.name}</Text>;
+}
 
 export function Admin() {
 	const profile = useQuery("profile", getUserProfile);
@@ -27,6 +39,14 @@ export function Admin() {
 	const [author, setAuthor] = useState("");
 	const [category, setCategory] = useState("");
 	const toast = useToast();
+	const [searchString, setSearchString] = useState("");
+	const [debouncedQuery, someFunction] = useDebounce(searchString, 500);
+
+	const { data, isLoading, error } = useQuery(
+		["search", debouncedQuery],
+		() => searchUser(debouncedQuery),
+		{ enabled: Boolean(debouncedQuery) }
+	);
 
 	if (profile.isLoading) {
 		return <Loader />;
@@ -63,6 +83,23 @@ export function Admin() {
 			addCategory(category);
 			toast({
 				description: "Added successfully",
+				status: "success",
+				duration: 5000,
+			});
+		} catch (e) {
+			toast({
+				description: "Something went wrong",
+				status: "error",
+				duration: 5000,
+			});
+		}
+	};
+
+	const onDeleteUser = (id: number) => {
+		try {
+			deleteUser(id);
+			toast({
+				description: "Deleted successfully",
 				status: "success",
 				duration: 5000,
 			});
@@ -157,11 +194,48 @@ export function Admin() {
 						</AccordionButton>
 					</h2>
 					<AccordionPanel pb={4}>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-						sed do eiusmod tempor incididunt ut labore et dolore
-						magna aliqua. Ut enim ad minim veniam, quis nostrud
-						exercitation ullamco laboris nisi ut aliquip ex ea
-						commodo consequat.
+						<InputGroup w="full" mx="auto" mt="4">
+							<InputLeftElement
+								pointerEvents="none"
+								children={<BiSearch color="gray.300" />}
+							/>
+							<Input
+								placeholder="Search..."
+								py={5}
+								onChange={(e) =>
+									setSearchString(e.target.value)
+								}
+							/>
+						</InputGroup>
+						{isLoading ? (
+							<Spinner size="xl" color="green.500" />
+						) : (
+							<Box pt="6">
+								{data?.data.map((user, id) => (
+									<Stack
+										direction={"row"}
+										spacing={4}
+										align={"center"}
+										key={id}
+										p="4"
+										borderRadius="lg"
+										bg="gray.100"
+									>
+										<Avatar name={user.name} size="sm" />
+										<Text fontWeight={600}>
+											{user.name}
+										</Text>
+										<Spacer />
+										<Button
+											colorScheme="red"
+											onClick={() => deleteUser(user.id)}
+										>
+											Delete
+										</Button>
+									</Stack>
+								))}
+							</Box>
+						)}
 					</AccordionPanel>
 				</AccordionItem>
 			</Accordion>

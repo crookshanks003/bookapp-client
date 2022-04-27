@@ -41,3 +41,11 @@ export function getFeed() {
 export function getUserBooks(){
 	return client.get<any, AxiosResponse<Book[], any>>("/book", getConfig());
 }
+
+export function searchUser(q: string){
+	return client.get<any, AxiosResponse<User[], any>>(`/search?query=${q}`, getConfig());
+}
+
+export function deleteUser(id: number){
+	return client.delete(`/${id}`, getConfig());
+}
