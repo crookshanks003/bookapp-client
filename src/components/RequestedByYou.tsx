@@ -6,15 +6,32 @@ import {
 	useColorModeValue,
 	HStack,
 	Flex,
+    Button,
+    useToast,
 } from "@chakra-ui/react";
+import { changeTransactionStatus } from "../services/api/transaction";
 import { toNameCase } from "../services/utils/stringUtils";
 import { Transaction, TransactionStatus } from "../types/transaction";
 
-export function RequestedByYou({ transaction }: { transaction: Transaction }) {
+export function RequestedByYou({ transaction, refetch }: { transaction: Transaction, refetch: Function}) {
 	const statusStuff = {
 		REQUESTED: "red.500",
 		BORROWED: "orange.500",
 		RETURNED: "green.500",
+	};
+	const toast = useToast();
+
+	const onStatusClick = (status: TransactionStatus) => {
+		try {
+			changeTransactionStatus(status, transaction.id);
+		} catch (e: any) {
+			toast({
+				description: "Something went wrong",
+				status: "error",
+				duration: 3000,
+				isClosable: true,
+			});
+		}
 	};
 
 	return (
@@ -114,14 +131,25 @@ export function RequestedByYou({ transaction }: { transaction: Transaction }) {
 				>
 					{transaction.transactionStatus.toLowerCase()}
 				</Text>
-				<Text
-					color={"gray.700"}
-					fontWeight={600}
-					letterSpacing={1.1}
-					fontFamily="heading"
-				>
-					{transaction.book.price} creds
-				</Text>
+				<HStack spacing="4">
+					<Text
+						color={"gray.700"}
+						fontWeight={600}
+						letterSpacing={1.1}
+						fontFamily="heading"
+					>
+						{transaction.book.price} creds
+					</Text>
+					<Button
+						colorScheme="red"
+						onClick={() =>
+							{onStatusClick(TransactionStatus.CANCELED)
+							refetch();}
+						}
+					>
+						Cancel
+					</Button>
+				</HStack>
 			</Flex>
 		</Box>
 	);

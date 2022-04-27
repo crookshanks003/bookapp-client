@@ -12,13 +12,14 @@ import {
 } from "../services/api/transaction";
 import { RequestedByYou } from "../components/RequestedByYou";
 import { RequestedFromYou } from "../components/RequestedFromYou";
+import { TransactionStatus } from "../types/transaction";
 
 export function Home({
 	setLoggedIn,
 }: {
 	setLoggedIn: Dispatch<SetStateAction<boolean>>;
 }) {
-	const { data, isLoading, error } = useQuery("feed", getFeed);
+	const { data, isLoading, error, refetch } = useQuery("feed", getFeed);
 	const transactions = useQuery("user-transaction", getTransactionForUser);
 	const requests = useQuery("user-request", getRequests);
 
@@ -50,14 +51,24 @@ export function Home({
 					</Text>
 					<Stack w="md" spacing="4">
 						{transactions.data?.data.length === 0 ? (
-							<Text fontStyle="italic" color="gray.500">You have no borrowings...</Text>
+							<Text fontStyle="italic" color="gray.500">
+								You have no borrowings...
+							</Text>
 						) : (
-							transactions.data?.data.map((transaction, id) => (
-								<RequestedByYou
-									key={id}
-									transaction={transaction}
-								/>
-							))
+							transactions.data?.data.map((transaction, id) => {
+								if (
+									transaction.transactionStatus !==
+									TransactionStatus.CANCELED
+								) {
+									return (
+										<RequestedByYou
+											key={id}
+											transaction={transaction}
+											refetch={transactions.refetch}
+										/>
+									);
+								}
+							})
 						)}
 					</Stack>
 				</Box>
@@ -71,9 +82,14 @@ export function Home({
 					>
 						UPDATES
 					</Text>
-					<Stack w="xl" spacing="4">
+					<Stack w="md" spacing="4">
 						{data.data.map((book, id) => (
-							<BookComponent key={id} book={book} />
+							<BookComponent
+								key={id}
+								book={book}
+								requestButton
+								refetch={() => null}
+							/>
 						))}
 					</Stack>
 				</Box>
@@ -89,14 +105,24 @@ export function Home({
 					</Text>
 					<Stack w="md" spacing="4">
 						{requests.data?.data.length === 0 ? (
-							<Text fontStyle="italic" color="gray.500">You have no requests...</Text>
+							<Text fontStyle="italic" color="gray.500">
+								You have no requests...
+							</Text>
 						) : (
-							requests.data?.data.map((transaction, id) => (
-								<RequestedFromYou
-									key={id}
-									transaction={transaction}
-								/>
-							))
+							requests.data?.data.map((request, id) => {
+								if (
+									request.transactionStatus !==
+									TransactionStatus.CANCELED
+								) {
+									return (
+										<RequestedFromYou
+											key={id}
+											transaction={request}
+											refetch={requests.refetch}
+										/>
+									);
+								}
+							})
 						)}
 					</Stack>
 				</Box>

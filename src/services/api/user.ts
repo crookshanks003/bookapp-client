@@ -1,5 +1,5 @@
 import axios, { Axios, AxiosResponse } from "axios";
-import { FeedBook } from "../../types/book";
+import { Book, FeedBook } from "../../types/book";
 import { RegisterUserDto, User } from "../../types/user";
 import { getConfig } from "../utils/localStorageUtils";
 
@@ -36,4 +36,8 @@ export function getFeed() {
 		"/feed",
 		getConfig()
 	);
+}
+
+export function getUserBooks(){
+	return client.get<any, AxiosResponse<Book[], any>>("/book", getConfig());
 }

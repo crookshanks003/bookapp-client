@@ -16,8 +16,10 @@ import { Transaction, TransactionStatus } from "../types/transaction";
 
 export function RequestedFromYou({
 	transaction,
+	refetch,
 }: {
 	transaction: Transaction;
+	refetch: Function;
 }) {
 	const statusStuff = {
 		REQUESTED: "red.500",
@@ -121,7 +123,7 @@ export function RequestedFromYou({
 				>
 					{transaction.transactionStatus.toLowerCase()}
 				</Text>
-				<ButtonGroup spacing="2">
+				{transaction.transactionStatus === TransactionStatus.REQUESTED && <ButtonGroup spacing="2">
 					<Button
 						colorScheme="green"
 						variant="outline"
@@ -133,13 +135,14 @@ export function RequestedFromYou({
 					</Button>
 					<Button
 						colorScheme="red"
-						onClick={() =>
-							onStatusClick(TransactionStatus.CANCELED)
-						}
+						onClick={() => {
+							onStatusClick(TransactionStatus.CANCELED);
+							refetch();
+						}}
 					>
 						Cancel
 					</Button>
-				</ButtonGroup>
+				</ButtonGroup>}
 			</Flex>
 		</Box>
 	);

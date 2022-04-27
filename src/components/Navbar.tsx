@@ -15,6 +15,7 @@ import {
 	Stack,
 	Text,
 	Spinner,
+	MenuDivider,
 } from "@chakra-ui/react";
 import {
 	Link as ReactRouterLink,
@@ -26,7 +27,8 @@ import { ImBook } from "react-icons/im";
 import { clearLocalStorage } from "../services/utils/localStorageUtils";
 import { useQuery } from "react-query";
 import { getUserProfile } from "../services/api/user";
-import {BiSearch} from "react-icons/bi"
+import { BiSearch } from "react-icons/bi";
+import { Role } from "../types/user";
 
 const NavLink = ({
 	children,
@@ -71,7 +73,7 @@ export const Navbar = ({
 				{ name: "Home", href: "/home" },
 				{ name: "Add", href: "/add-book" },
 				{ name: "Search", href: "/search" },
-				{ name: "Recent", href: "/recent" },
+				{ name: "History", href: "/history" },
 		  ]
 		: [];
 
@@ -172,6 +174,14 @@ export const Navbar = ({
 									>
 										Profile
 									</MenuItem>
+									{data?.data.role == Role.ADMIN && (
+										<MenuItem
+											onClick={() => navigate("/admin")}
+										>
+											Admin
+										</MenuItem>
+									)}
+									<MenuDivider />
 									<MenuItem onClick={logOut}>
 										Log out
 									</MenuItem>
