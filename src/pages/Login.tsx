@@ -7,6 +7,8 @@ import {
 	FormLabel,
 	Heading,
 	Input,
+	InputGroup,
+	InputRightElement,
 	Link,
 	Stack,
 	Text,
@@ -17,12 +19,17 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/api/user";
 import { setLocalStorage } from "../services/utils/localStorageUtils";
-import {Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
-export function Login({setLoggedIn}: {setLoggedIn: Dispatch<SetStateAction<boolean>>}) {
+export function Login({
+	setLoggedIn,
+}: {
+	setLoggedIn: Dispatch<SetStateAction<boolean>>;
+}) {
 	const [buttonLoading, setButtonLoading] = useState(false);
 	const toast = useToast();
 	const navigate = useNavigate();
+	const [passShow, setPassShow] = useState(false);
 	const [loginInfo, setLoginInfo] = useState({
 		email: "",
 		password: "",
@@ -66,7 +73,15 @@ export function Login({setLoggedIn}: {setLoggedIn: Dispatch<SetStateAction<boole
 				mx="auto"
 			>
 				<Stack spacing={4}>
-				<Heading fontSize="xl" color="gray.700" letterSpacing="wide" mb={3} textAlign="center">Login to Bookexchange</Heading>
+					<Heading
+						fontSize="xl"
+						color="gray.700"
+						letterSpacing="wide"
+						mb={3}
+						textAlign="center"
+					>
+						Login to Bookexchange
+					</Heading>
 					<FormControl id="email">
 						<FormLabel color="gray.700">Email address</FormLabel>
 						<Input
@@ -78,12 +93,23 @@ export function Login({setLoggedIn}: {setLoggedIn: Dispatch<SetStateAction<boole
 					</FormControl>
 					<FormControl id="password">
 						<FormLabel color="gray.700">Password</FormLabel>
-						<Input
-							type="password"
-							name="password"
-							onChange={onLoginValueChange}
-							color="gray.700"
-						/>
+						<InputGroup>
+							<Input
+								type={passShow ? "text" : "password"}
+								name="password"
+								onChange={onLoginValueChange}
+								color="gray.700"
+							/>
+							<InputRightElement width="4.5rem">
+								<Button
+									h="1.75rem"
+									size="sm"
+									onClick={() => setPassShow(!passShow)}
+								>
+									{passShow ? "Hide" : "Show"}
+								</Button>
+							</InputRightElement>
+						</InputGroup>
 					</FormControl>
 					<Stack spacing={8}>
 						<Stack
@@ -101,12 +127,18 @@ export function Login({setLoggedIn}: {setLoggedIn: Dispatch<SetStateAction<boole
 							Sign in
 						</Button>
 					</Stack>
-						<Center marginTop="0px">
-							<Text>
-								New Here?{" "}
-								<Link as={RouterLink} color="green.400" to="/register">Register</Link>
-							</Text>
-						</Center>
+					<Center marginTop="0px">
+						<Text>
+							New Here?{" "}
+							<Link
+								as={RouterLink}
+								color="green.400"
+								to="/register"
+							>
+								Register
+							</Link>
+						</Text>
+					</Center>
 				</Stack>
 			</Box>
 		</Box>

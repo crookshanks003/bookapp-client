@@ -11,6 +11,8 @@ import {
 	Text,
 	Box,
 	useToast,
+	InputGroup,
+	InputRightElement,
 } from "@chakra-ui/react";
 import illustration from "../images/illustration.svg";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
@@ -27,6 +29,7 @@ export function Register() {
 	};
 	const [registerInfo, setRegisterInfo] = useState(intitialState);
 	const [buttonLoading, setButtonLoading] = useState(false);
+	const [passShow, setPassShow] = useState(false);
 	const navigate = useNavigate();
 	const toast = useToast();
 
@@ -145,11 +148,22 @@ export function Register() {
 						</FormControl>
 						<FormControl id="password">
 							<FormLabel>Password</FormLabel>
-							<Input
-								type="password"
-								name="password"
-								onChange={onRegisterValueChange}
-							/>
+							<InputGroup>
+								<Input
+									type={passShow ? "text" : "password"}
+									name="password"
+									onChange={onRegisterValueChange}
+								/>
+								<InputRightElement width="4.5rem">
+									<Button
+										h="1.75rem"
+										size="sm"
+										onClick={() => setPassShow(!passShow)}
+									>
+										{passShow ? "Hide" : "Show"}
+									</Button>
+								</InputRightElement>
+							</InputGroup>
 						</FormControl>
 						<Stack spacing={2}>
 							<Button

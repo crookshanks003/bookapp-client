@@ -9,6 +9,7 @@ import {
 	ButtonGroup,
 	Button,
 	useToast,
+    Tooltip,
 } from "@chakra-ui/react";
 import { changeTransactionStatus } from "../services/api/transaction";
 import { toNameCase } from "../services/utils/stringUtils";
@@ -54,7 +55,7 @@ export function RequestedFromYou({
 			p={6}
 			overflow={"hidden"}
 		>
-			<Stack direction={"row"} spacing={4} align={"center"}>
+			<Flex justify="space-between">
 				<Stack direction={"column"} spacing={0} fontSize={"sm"}>
 					<Text fontWeight={600}>
 						<span
@@ -73,7 +74,23 @@ export function RequestedFromYou({
 						{transaction.requestedDate}
 					</Text>
 				</Stack>
-			</Stack>
+				{transaction.transactionStatus ===
+					TransactionStatus.BORROWED && (
+					<Stack
+						direction={"column"}
+						spacing={0}
+						fontSize={"sm"}
+						textAlign="end"
+					>
+						<Text fontWeight={600} letterSpacing="wide">
+							Return Date
+						</Text>
+						<Text color={"gray.700"} fontWeight="600">
+							{transaction.returnDate}
+						</Text>
+					</Stack>
+				)}
+			</Flex>
 			<Stack mt={6}>
 				<Text
 					color={"green.500"}
@@ -123,26 +140,40 @@ export function RequestedFromYou({
 				>
 					{transaction.transactionStatus.toLowerCase()}
 				</Text>
-				{transaction.transactionStatus === TransactionStatus.REQUESTED && <ButtonGroup spacing="2">
-					<Button
-						colorScheme="green"
-						variant="outline"
+				{transaction.transactionStatus ===
+					TransactionStatus.REQUESTED && (
+					<ButtonGroup spacing="2">
+						<Button
+							colorScheme="green"
+							variant="outline"
+							onClick={() =>
+								onStatusClick(TransactionStatus.BORROWED)
+							}
+						>
+							Approve
+						</Button>
+						<Button
+							colorScheme="red"
+							onClick={() => {
+								onStatusClick(TransactionStatus.CANCELED);
+								refetch();
+							}}
+						>
+							Cancel
+						</Button>
+					</ButtonGroup>
+				)}
+				{transaction.transactionStatus ===
+					TransactionStatus.BORROWED && (
+					<Tooltip label="Mark book as returned"><Button
+						colorScheme="orange"
 						onClick={() =>
-							onStatusClick(TransactionStatus.BORROWED)
+							onStatusClick(TransactionStatus.RETURNED)
 						}
 					>
-						Approve
-					</Button>
-					<Button
-						colorScheme="red"
-						onClick={() => {
-							onStatusClick(TransactionStatus.CANCELED);
-							refetch();
-						}}
-					>
-						Cancel
-					</Button>
-				</ButtonGroup>}
+						Returned
+					</Button></Tooltip>
+				)}
 			</Flex>
 		</Box>
 	);

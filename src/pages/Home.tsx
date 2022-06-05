@@ -19,7 +19,7 @@ export function Home({
 }: {
 	setLoggedIn: Dispatch<SetStateAction<boolean>>;
 }) {
-	const { data, isLoading, error, refetch } = useQuery("feed", getFeed);
+	const { data, isLoading, error } = useQuery("feed", getFeed);
 	const transactions = useQuery("user-transaction", getTransactionForUser);
 	const requests = useQuery("user-request", getRequests);
 
@@ -57,17 +57,20 @@ export function Home({
 						) : (
 							transactions.data?.data.map((transaction, id) => {
 								if (
-									transaction.transactionStatus !==
-									TransactionStatus.CANCELED
+									transaction.transactionStatus ===
+										TransactionStatus.CANCELED ||
+									transaction.transactionStatus ===
+										TransactionStatus.RETURNED
 								) {
-									return (
-										<RequestedByYou
-											key={id}
-											transaction={transaction}
-											refetch={transactions.refetch}
-										/>
-									);
+									return;
 								}
+								return (
+									<RequestedByYou
+										key={id}
+										transaction={transaction}
+										refetch={transactions.refetch}
+									/>
+								);
 							})
 						)}
 					</Stack>
@@ -111,17 +114,20 @@ export function Home({
 						) : (
 							requests.data?.data.map((request, id) => {
 								if (
-									request.transactionStatus !==
-									TransactionStatus.CANCELED
+									request.transactionStatus ===
+										TransactionStatus.CANCELED ||
+									request.transactionStatus ===
+										TransactionStatus.RETURNED
 								) {
-									return (
-										<RequestedFromYou
-											key={id}
-											transaction={request}
-											refetch={requests.refetch}
-										/>
-									);
+									return;
 								}
+								return (
+									<RequestedFromYou
+										key={id}
+										transaction={request}
+										refetch={requests.refetch}
+									/>
+								);
 							})
 						)}
 					</Stack>

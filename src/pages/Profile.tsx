@@ -35,6 +35,7 @@ export function Profile() {
 					{profile.data?.data.name}
 				</Heading>
 				<Text mt="2">{profile.data.data.email}</Text>
+				<Text mt="2">{profile.data.data.wallet} creds</Text>
 				<Link to="/set-categories">
 					<Text fontSize="sm" color="green" mt="4">
 						Edit Categories

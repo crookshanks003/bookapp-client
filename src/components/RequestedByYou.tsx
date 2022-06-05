@@ -6,14 +6,20 @@ import {
 	useColorModeValue,
 	HStack,
 	Flex,
-    Button,
-    useToast,
+	Button,
+	useToast,
 } from "@chakra-ui/react";
 import { changeTransactionStatus } from "../services/api/transaction";
 import { toNameCase } from "../services/utils/stringUtils";
 import { Transaction, TransactionStatus } from "../types/transaction";
 
-export function RequestedByYou({ transaction, refetch }: { transaction: Transaction, refetch: Function}) {
+export function RequestedByYou({
+	transaction,
+	refetch,
+}: {
+	transaction: Transaction;
+	refetch: Function;
+}) {
 	const statusStuff = {
 		REQUESTED: "red.500",
 		BORROWED: "orange.500",
@@ -77,7 +83,7 @@ export function RequestedByYou({ transaction, refetch }: { transaction: Transact
 							Return Date
 						</Text>
 						<Text color={"gray.700"} fontWeight="600">
-							{transaction.returnDate}
+							{transaction.expReturnDate}
 						</Text>
 					</Stack>
 				)}
@@ -140,15 +146,18 @@ export function RequestedByYou({ transaction, refetch }: { transaction: Transact
 					>
 						{transaction.book.price} creds
 					</Text>
-					<Button
-						colorScheme="red"
-						onClick={() =>
-							{onStatusClick(TransactionStatus.CANCELED)
-							refetch();}
-						}
-					>
-						Cancel
-					</Button>
+					{transaction.transactionStatus ==
+						TransactionStatus.REQUESTED && (
+						<Button
+							colorScheme="red"
+							onClick={() => {
+								onStatusClick(TransactionStatus.CANCELED);
+								refetch();
+							}}
+						>
+							Cancel
+						</Button>
+					)}
 				</HStack>
 			</Flex>
 		</Box>

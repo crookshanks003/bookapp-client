@@ -145,49 +145,41 @@ export const Navbar = ({
 							</NavLink>
 						))}
 					</HStack>
-					{isLoading ? (
-						<Spinner />
-					) : (
-						loggedIn && (
-							<Menu>
-								<MenuButton
-									as={Button}
-									rounded={"full"}
-									variant={"link"}
-									cursor={"pointer"}
+					{loggedIn && (
+						<Menu>
+							<MenuButton
+								as={Button}
+								rounded={"full"}
+								variant={"link"}
+								cursor={"pointer"}
+								background="gray.700"
+								minW={0}
+								ms={4}
+								disabled={isError}
+							>
+								<Avatar
+									size="sm"
+									src={undefined}
+									name={data?.data.name}
 									background="gray.700"
-									minW={0}
-									ms={4}
-									disabled={isError}
-								>
-									<Avatar
-										size="sm"
-										src={undefined}
-										name={data?.data.name}
-										background="gray.700"
-										color="white"
-									/>
-								</MenuButton>
-								<MenuList>
+									color="white"
+								/>
+							</MenuButton>
+							<MenuList>
+								<MenuItem onClick={() => navigate("/profile")}>
+									Profile
+								</MenuItem>
+								{data?.data.role == Role.ADMIN && (
 									<MenuItem
-										onClick={() => navigate("/profile")}
+										onClick={() => navigate("/admin")}
 									>
-										Profile
+										Admin
 									</MenuItem>
-									{data?.data.role == Role.ADMIN && (
-										<MenuItem
-											onClick={() => navigate("/admin")}
-										>
-											Admin
-										</MenuItem>
-									)}
-									<MenuDivider />
-									<MenuItem onClick={logOut}>
-										Log out
-									</MenuItem>
-								</MenuList>
-							</Menu>
-						)
+								)}
+								<MenuDivider />
+								<MenuItem onClick={logOut}>Log out</MenuItem>
+							</MenuList>
+						</Menu>
 					)}
 				</Flex>
 			</Flex>
